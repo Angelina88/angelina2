@@ -55,32 +55,53 @@ namespace RingBufferTests
             var item3 = new byte[] { 3, 3, 3, 3, 3, 3, 3, 3 };
             var task1 = Task.Factory.StartNew(
                 () => {
-                    Thread.Sleep(100);
-                    _buffer.Push(new List<byte[]> { item1 });
-                    Thread.Sleep(1000);
-                    _buffer.Pop(1);
+                    for (var i = 0; i < 3; i++)
+                    {
+                        int pushed = 0;
+                        while (pushed == 0)
+                        {
+                            Thread.Sleep(100);
+                            pushed = _buffer.Push(new List<byte[]> { item1 });
+                        }
+                    }
                 });
             var task2 = Task.Factory.StartNew(
                 () => {
-                    _buffer.Push(new List<byte[]> { item2 });
-                    Thread.Sleep(100);
-                    _buffer.Push(new List<byte[]> { item3 });
-                    Thread.Sleep(500);
-                    _buffer.Pop(2);
+                    for (var i = 0; i < 3; i++)
+                    {
+                        int pushed = 0;
+                        while (pushed == 0)
+                        {
+                            Thread.Sleep(100);
+                            pushed = _buffer.Push(new List<byte[]> { item2 });
+                        }
+                    }
                 });
             var task3 = Task.Factory.StartNew(
                 () => {
-                    Thread.Sleep(1000);
-                    _buffer.Push(new List<byte[]> { item1 });
-                    Thread.Sleep(100);
-                    _buffer.Push(new List<byte[]> { item1 });
-                    _buffer.Pop(2);
+                    for (var i = 0; i < 3; i++)
+                    {
+                        int pushed = 0;
+                        while (pushed == 0)
+                        {
+                            Thread.Sleep(100);
+                            pushed = _buffer.Push(new List<byte[]> { item3 });
+                        }
+                    }
+
                 });
-            Task.WaitAll(task1, task2, task3);
+            var readCount = 0;
+            var task4 = Task.Factory.StartNew(
+                () => {
+                    for (var i = 0; i < 5; i++)
+                    {
+                        Thread.Sleep(200);
+                        readCount += _buffer.Pop(2).Count();
+                    }
+                });
+            Task.WaitAll(task1, task2, task3, task4);
 
-            var resultItems = _buffer.Pop(3);
-
-            Assert.AreEqual(0, resultItems.Count());
+            Assert.AreEqual(9, readCount);
         }
     }
 }
