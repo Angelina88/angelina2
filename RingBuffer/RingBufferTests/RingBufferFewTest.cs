@@ -60,7 +60,7 @@ namespace RingBufferTests
                         int pushed = 0;
                         while (pushed == 0)
                         {
-                            Thread.Sleep(100);
+                            //Thread.Sleep(100);
                             pushed = _buffer.Push(new List<byte[]> { item1 });
                         }
                     }
@@ -72,7 +72,7 @@ namespace RingBufferTests
                         int pushed = 0;
                         while (pushed == 0)
                         {
-                            Thread.Sleep(100);
+                            //Thread.Sleep(100);
                             pushed = _buffer.Push(new List<byte[]> { item2 });
                         }
                     }
@@ -84,7 +84,7 @@ namespace RingBufferTests
                         int pushed = 0;
                         while (pushed == 0)
                         {
-                            Thread.Sleep(100);
+                            //Thread.Sleep(100);
                             pushed = _buffer.Push(new List<byte[]> { item3 });
                         }
                     }
@@ -95,7 +95,7 @@ namespace RingBufferTests
                 () => {
                     for (var i = 0; i < 5; i++)
                     {
-                        Thread.Sleep(200);
+                        //Thread.Sleep(200);
                         readCount += _buffer.Pop(2).Count();
                     }
                 });
